@@ -1,0 +1,27 @@
+{
+  "name": "rest-shop",
+  "version": "1.0.0",
+  "description": "A node.js RESTful API project (inventory shop API)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/preetmodh/Inventory-RESTAPI-NODE.git"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "Preet Modh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/preetmodh/Inventory-RESTAPI-NODE/issues"
+  },
+  "homepage": "https://github.com/preetmodh/Inventory-RESTAPI-NODE#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
