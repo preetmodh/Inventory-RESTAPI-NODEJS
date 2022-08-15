@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const Product = require('../models/product');
 
-
+// Handle incoming GET requests to /products
 router.get('/',(req,res,next)=>{
     Product.find().select('name price _id').exec()
     .then(products => {
@@ -30,6 +30,7 @@ router.get('/',(req,res,next)=>{
     } )
 });
 
+// Handle incoming POST requests to /products
 router.post('/',(req,res,next)=>{
     const newProduct = new Product({
         _id: new mongoose.Types.ObjectId(),
@@ -59,6 +60,7 @@ router.post('/',(req,res,next)=>{
    
 });
 
+// Handle incoming GET requests to /products/:productId
 router.get('/:productId',(req,res,next)=>{
     const id = req.params.productId;
 
@@ -86,6 +88,7 @@ router.get('/:productId',(req,res,next)=>{
                         });
 });
 
+// Handle incoming PATCH requests to /products/:productId
 router.patch('/:productId',(req,res,next)=>{
     const id = req.params.productId;
     const updateOps = {};
@@ -111,6 +114,7 @@ router.patch('/:productId',(req,res,next)=>{
     
 });
 
+// Handle incoming DELETE requests to /products/:productId
 router.delete('/:productId',(req,res,next)=>{
     Product.remove({_id: req.params.productId}).exec()
     .then(result=>{
