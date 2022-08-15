@@ -10,8 +10,12 @@ const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect('mongodb+srv://node-rest-shop:'+process.env.MONGO_ATLAS_PASSWORD+'@node-rest-inventory.agjs6uh.mongodb.net/?retryWrites=true&w=majority');
 mongoose.Promise = global.Promise;
+
 //logging request to console middleware
 app.use(morgan('dev'));
+
+//makes upload folder publicly/staticly available
+app.use('/uploads',express.static('uploads'));
 
 //body-parser middleware
 app.use(bodyParser.urlencoded({extended: false}));

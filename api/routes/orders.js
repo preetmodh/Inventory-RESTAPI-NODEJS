@@ -17,8 +17,8 @@ router.get("/", (req, res, next) => {
         orders: docs.map(doc => {
           return {
             _id: doc._id,
-            product: doc.product,
             quantity: doc.quantity,
+            product: doc.product,
             request: {
               type: "GET",
               url: "http://localhost:3000/orders/" + doc._id
@@ -75,7 +75,7 @@ router.post("/", (req, res, next) => {
 
 router.get("/:orderId", (req, res, next) => {
     Order.findById(req.params.orderId)
-    .populate("product", "name price")
+    .populate("product", "name price productImage")
         .exec()
         .then(order => {
         if (!order) {

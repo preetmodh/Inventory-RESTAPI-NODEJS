@@ -1,12 +1,40 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+//configuring  multer for file uploads
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, './uploads/');
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+//only accepting images with conditions
+const fileFilter = (req, file, cb) => {
+    // reject a file 
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  };
+const upload = multer({
+    storage: storage,
+    limits: {
+      fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+  });
+
 
 const Product = require('../models/product');
 
 // Handle incoming GET requests to /products
 router.get('/',(req,res,next)=>{
-    Product.find().select('name price _id').exec()
+    Product.find().select('name price _id productImage').exec()
     .then(products => {
         const response = {
             count: products.length,
@@ -15,6 +43,7 @@ router.get('/',(req,res,next)=>{
                     name: product.name,
                     price: product.price,
                     _id: product._id,
+                    productImage: product.productImage,
                     requests :{
                         type: 'GET',
                         url: 'http://localhost:3000/products/'+product._id
@@ -31,19 +60,20 @@ router.get('/',(req,res,next)=>{
 });
 
 // Handle incoming POST requests to /products
-router.post('/',(req,res,next)=>{
+router.post('/',upload.single('productImage'),(req,res,next)=>{
     const newProduct = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        productImage: req.file.path
     });
     newProduct.save().then(result=>{
         res.status(201).json({
             message: 'Created product succussfully!',
             createdProduct: {
+                _id: result._id,
                 name: result.name,
                 price: result.price,
-                _id: result._id,
                 requests: {
                     type: 'GET',
                     url: 'http://localhost:3000/products/'+result._id
@@ -64,7 +94,7 @@ router.post('/',(req,res,next)=>{
 router.get('/:productId',(req,res,next)=>{
     const id = req.params.productId;
 
-    Product.findById(id).select('name price _id').exec()
+    Product.findById(id).select('name price _id productImage').exec()
                         .then(product=>{
                             if (product){
                                 res.status(200).json({
